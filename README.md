@@ -30,8 +30,8 @@ Web:		http://www.scienceguyrob.com or http://www.cs.manchester.ac.uk
 
 2. Algorithms
 
-	There are two version of the algorithm provided. The first version is designed to wowrk with the
-	MOA stream testing framework. It can be found in the MOA subdirectory of the distribution. The 
+	There are two version of the algorithm provided. The first version is designed to work with the
+	MOA stream testing framework. It can be found in the MOA sub-directory of the distribution. The 
 	second version is a complete Java version that requires no external libraries, designed to operate
 	outside of MOA. Use whichever version suits your needs.
 	
