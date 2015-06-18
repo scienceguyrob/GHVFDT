@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<project name="Ant-Test" default="main" basedir=".">
+	<!-- 
+	
+	This is the ant build file for this project. It is used to automate the building,
+	and testing of the code contained herein - it is really useful. If you don't
+	have ant / or have never heard of it, its probably worth looking at how it works. But for
+	now, if you install the Eclipse IDE with pydev to build this project, then ant should be
+	already installed for you. Simply run this script within Eclipse and you'll see building
+	and testing run automatically.
+	
+	Rob.
+	-->
+	
+	<!-- Sets variables used for testing and distributing. -->
+	<property name="src.dir" location="src" />
+	<property name="resources.dir" location="lib" />
+	<property name="test.dir" location="test" />
+	<property name="build.dir" location="build"/>
+	<property name="dist.dir" location="dist" />
+	<property name="docs.dir" location="docs" />
+
+	<!-- Deletes the existing build and dist directories -->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${test.dir}" />
+		<delete dir="${docs.dir}" />
+	</target>
+
+	<!-- Creates the build and dist directories -->
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${test.dir}" />
+		<mkdir dir="${docs.dir}" />
+	</target>
+	
+	
+	<!-- 					   		   -->
+	<!-- 					   		   -->
+	<!-- PREPARE TESTS  			   -->
+	<!-- 					           -->
+	<!-- 					   		   -->
+	
+	<target name="copy" depends="clean, makedir">
+		
+		<!-- Copy code to the distribution directory. -->
+		<copy todir="${dist.dir}" overwrite="true">
+			<fileset dir="${src.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		
+		<!-- Copy code to the test direcotry. -->
+		<copy todir="${test.dir}" overwrite="true">
+		  <fileset dir="${src.dir}">
+		    <include name="**/*" />
+		  </fileset>
+		</copy>
+		
+	</target>
+	
+	<!-- Compiles the java code (including the usage of library for JUnit (source="1.5" target="1.5") -->
+	<target name="compile" depends="clean, makedir">
+		<javac srcdir="${src.dir}" destdir="${build.dir}"
+			includeantruntime="false" source="1.5" target="1.5"
+			classpath="${resources.dir}/moa.jar:${resources.dir}/sizeofag.jar:${resources.dir}/Stuffed.jar">
+		</javac>
+	</target>
+
+	<!-- Creates Javadoc -->
+	<target name="docs" depends="compile">
+		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
+			<!-- Define which files / directory should get included, we include all but... -->
+			<fileset dir="${src.dir}">
+				<exclude name="**/${resources.dir}/**" />
+				<exclude name="**/i18N/**" />
+				<exclude name="**/test/**" />
+				<exclude name="**/images/**" />
+				<include name="**" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<!-- Build the jar. -->
+	<target name="jar" depends="compile">
+		<jar destfile="${dist.dir}\GHVFDT.jar" basedir="${build.dir}">
+			<fileset dir="${build.dir}">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<zipfileset dir="${resources.dir}" includes="**/*.jar" prefix="lib" />
+			<manifest>
+				<attribute name="Main-Class" value="moa.gui.GUI" />
+				<attribute name="Class-Path" value="lib/moa.jar lib/sizeofag.jar lib/stuffed.jar"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<!-- 					       -->
+	<!-- 					       -->
+	<!--   PRIMARY BUILD TARGET    -->
+	<!-- 					       -->
+	<!-- 					       -->
+	
+	<target name="main" depends="compile,jar,docs">
+		<description>Main target</description>
+	</target>
+	
+</project>
